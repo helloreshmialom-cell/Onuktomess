@@ -86,7 +86,7 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(loadUserId);
 
-  const currentUser = userId && data ? (data.members.find(m => m.id === userId) || null) : null;
+  const currentUser = userId && data && data.members ? (data.members.find(m => m.id === userId) || null) : null;
   const page = currentUser ? (currentUser.role === "admin" ? "admin" : "member") : "login";
 
   // Firebase থেকে real-time data load করো
