@@ -86,7 +86,8 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(loadUserId);
 
-  const currentUser = userId && data && data.members ? (data.members.find(m => m.id === userId) || null) : null;
+  // সেফটি গার্ড চেক: data এবং data.members ডায়নামিকভাবে চেক করা হচ্ছে যেন ক্র্যাশ না করে
+  const currentUser = userId && data && data.members ? (data.members.find(m => m?.id === userId) || null) : null;
   const page = currentUser ? (currentUser.role === "admin" ? "admin" : "member") : "login";
 
   // Firebase থেকে real-time data load করো
@@ -111,7 +112,9 @@ export default function App() {
   }
 
   function login(username, password) {
-    const user = data.members.find(m => m.username === username && m.password === password);
+    // এখানে সেফটি গার্ড চেক অ্যাড করা হয়েছে যেন মেম্বার ডাটা না থাকলেও ক্র্যাশ না করে
+    if (!data || !data.members) return false;
+    const user = data.members.find(m => m?.username === username && m?.password === password);
     if (user) {
       setUserId(user.id);
       localStorage.setItem("onukto-mess-userid", String(user.id));
@@ -129,12 +132,12 @@ export default function App() {
     return (
       <div style={{
         minHeight: "100vh", background: "#0f172a",
-        display: "flex", alignItems: "center", justifyContent: "center",
+        display: "flex", alignItems: "center", justifycenter: "center",
         fontFamily: "sans-serif"
       }}>
         <div style={{ textAlign: "center" }}>
           <div style={{ fontSize: 40, marginBottom: 16 }}>🍽️</div>
-          <p style={{ color: "#64748b", fontSize: 14 }}>Loading...</p>
+          <p style={{ color: "#64748b", fontSize: 14 }}>Loading Mess Database...</p>
         </div>
       </div>
     );
